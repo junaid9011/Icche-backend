@@ -15,12 +15,41 @@ exports.register = asyncError(async(req, res, next)=>{
     //     crop:"scale"
 
     // })
-    const {name,email,password}=req.body;
-
+    const {name,email,phone,password,address,nid,type}=req.body;
+    let isExist=await User.findOne({email:email});
+    
+    if(isExist){
+        return res.status(404).json({
+            success:false,
+            message:'This Email is Already Registered',
+        })
+    }
+     isExist=await User.findOne({phone:phone});
+    if(isExist){
+        return res.status(404).json({
+            success:false,
+            message:'This Phone is Already Registered',
+        })
+    }
+    //user id
+    let a="";
+    isExist=await User.find();
+    let length=isExist.length;
+    let userId
+    if(length>99)  userId=`IR0${length+1}`
+    else if(length>9) userId=`IR00${length+1}`
+    else userId=`IR000${a+1}`
+   
+    // console.log(userId)
     const user = await User.create({
+        userId,
         name,
         email,
+        phone,
         password,
+        address,
+        nid,
+        businessType:type
         // avater:{
         //     public_id:result.public._id,
         //     url:result.secure_url
@@ -35,15 +64,23 @@ exports.register = asyncError(async(req, res, next)=>{
 });
 
 exports.login = asyncError(async(req, res, next)=>{
-    const{email,password}=req.body;
-    //check if email and password are entered by user
-    if(!email || !password){
-        return next(new ErrorHandler('Please enter email and password',400))
+    const{userId,password}=req.body;
+    // console.log(req.body)
+    //check if userId and password are entered by user
+    if(!userId || !password){
+        return res.status(404).json({
+            success:false,
+            message:'Please Enter User Id and Password',
+        })
     }
     //finding user 
-    const findUser = await User.findOne({email}).select('+password')//we select password because we set password select false in usermodel
+    const findUser = await User.findOne({userId}).select('+password')//we select password because we set password select false in usermodel
     if(!findUser){
-        return next(new ErrorHandler('Invalid Password',401));
+        // return next(new ErrorHandler('Invalid Password',401));
+        return res.status(404).json({
+            success:false,
+            message:'Invalid Password',
+        })
 
     }
     //checks if password is correct or not
