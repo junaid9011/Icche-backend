@@ -32,10 +32,10 @@ exports.register = asyncError(async(req, res, next)=>{
         })
     }
     //user id
-    let a="";
-    isExist=await User.find();
+    // let a="";
+    isExist=await User.find({role:'user'});
     let length=isExist.length;
-    let userId
+    let userId="";
     if(length>99)  userId=`IR0${length+1}`
     else if(length>9) userId=`IR00${length+1}`
     else userId=`IR000${length+1}`
@@ -64,7 +64,7 @@ exports.register = asyncError(async(req, res, next)=>{
 });
 
 exports.login = asyncError(async(req, res, next)=>{
-    const{userId,password}=req.body;
+    let{userId,password}=req.body;
     // console.log(req.body)
     //check if userId and password are entered by user
     if(!userId || !password){
@@ -73,8 +73,11 @@ exports.login = asyncError(async(req, res, next)=>{
             message:'Please Enter User Id and Password',
         })
     }
+    userId=userId.toUpperCase();
+    
     //finding user 
     const findUser = await User.findOne({userId}).select('+password')//we select password because we set password select false in usermodel
+    
     if(!findUser){
         // return next(new ErrorHandler('Invalid Password',401));
         return res.status(404).json({
