@@ -38,7 +38,7 @@ exports.register = asyncError(async(req, res, next)=>{
     let userId
     if(length>99)  userId=`IR0${length+1}`
     else if(length>9) userId=`IR00${length+1}`
-    else userId=`IR000${a+1}`
+    else userId=`IR000${length+1}`
    
     // console.log(userId)
     const user = await User.create({
