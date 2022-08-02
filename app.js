@@ -23,7 +23,7 @@ app.use(cookieParser());
 // app.use(fileUpload());
 
 
-dotenv.config({path:'F:\\Ecommerce\\config\\config.env'}); 
+dotenv.config({path:'F:\\Icche\\config\\config.env'}); 
 
 
 //importes all routes
