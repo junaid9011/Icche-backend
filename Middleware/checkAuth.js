@@ -13,7 +13,7 @@ exports.isAuthenticatedUser = asyncError(async(req,res,next)=>{
         token = req.cookies.token;
       }
     
-    
+    // console.log(token)
     // console.log(req.cookies);
     if (!token){
         return next(new ErrorHandler('Login first',401));
@@ -25,9 +25,9 @@ exports.isAuthenticatedUser = asyncError(async(req,res,next)=>{
 });
 
 //handling user role change
-exports.authorizedRule =(...roles)=>{
+exports.authorizedRule =(role)=>{
     return(req,res,next)=>{
-       if(!(roles.includes(req.user.role))) {
+       if((req.user.role!==role)) {
           return next( new ErrorHandler(`Role (${req.user.role}) is not allowed `,403))
        }
        next()

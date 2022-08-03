@@ -190,8 +190,8 @@ exports.logout= asyncError(async(req, res, next)=>{
 //admin routes
 //get all users => /api/v1/admin/users
 exports.allUsers = asyncError(async(req, res, next)=>{
-    const users = await User.find();
-
+    const users = await User.find({role:'user'});
+    // console.log(users)
     res.status(200).json({
         success: true,
         users
@@ -213,12 +213,23 @@ exports.getuserDetails = asyncError(async(req, res, next)=>{
 exports.updateUserProfileById = asyncError(async(req, res, next)=>{
     const newUserData={
         name:req.body.name,
-        email:req.body.email.password,
+        email:req.body.email,
         role:req.body.role
     }
     //update avatar: TODO
 
     const user = await User.findByIdAndUpdate(req.params.id,newUserData,{
+        new:true,
+        runValidators: true,
+        usefindAndModify: false
+    })
+    res.status(200).json({
+        success: true,
+        user
+    })
+})
+exports.verifyUser = asyncError(async(req, res, next)=>{
+    const user = await User.findByIdAndUpdate(req.params.id,req.body,{
         new:true,
         runValidators: true,
         usefindAndModify: false

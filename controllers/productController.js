@@ -2,9 +2,20 @@ const Product=require('../Models/ProductModel');// it will import the schema
 const ErrorHandler=require('../Utlis/ErrorHandler');
 const asyncError=require('../Middleware/asyncError');
 const APIFeatures=require('../Utlis/APIFeatures');
+const cloudinary = require('cloudinary').v2
+const { fileUpload } = require('./fileUpload');
 //create new product => /api/v1/product/
+cloudinary.config({ 
+    cloud_name: 'junaidscloud', 
+    api_key:775371735753736 , 
+    api_secret:"S8V3jSmGuNfPOmGPPTKyjgzqczI",
+    secure:true
+  });
 exports.newProduct=  asyncError( async(req,res,next)=>{
-    req.body.user=req.user.id// currentlly login user
+    // 
+    const {image}=req.body
+    const isUploaded= await cloudinary.uploader.upload(image,{folder:"Icche"})
+    req.body.image=isUploaded.secure_url;
     const createProduct= await Product.create(req.body); // it will create new product according to schema
     res.status(201).json({
         success:true,
@@ -26,6 +37,19 @@ exports.getProducts= asyncError( async(req,res,next)=>{
         allProducts,
         productCount,
         resPerPage
+    });
+} )
+//get admin products
+exports.getAdminProducts= asyncError( async(req,res,next)=>{
+    // const resPerPage=12;// number of item show in one page
+    const productCount= await Product.countDocuments(); //it will use in front-end to count all the docoment
+
+    const allProducts=await Product.find() //without search facilites
+    res.status(200).json({
+        success:true,
+        count:allProducts.length,
+        allProducts,
+        productCount,
     });
 } )
 
