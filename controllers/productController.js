@@ -2,7 +2,6 @@ const Product=require('../Models/ProductModel');// it will import the schema
 const ErrorHandler=require('../Utlis/ErrorHandler');
 const asyncError=require('../Middleware/asyncError');
 const APIFeatures=require('../Utlis/APIFeatures');
-// const  cloudinary  = require('../Utlis/cloudinary');
 const cloudinary = require('cloudinary').v2
 const { fileUpload } = require('./fileUpload');
 //create new product => /api/v1/product/
