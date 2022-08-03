@@ -6,20 +6,7 @@ key:{
 },
 category:{
     type:String,
-    required:true
-    // enum:{
-    //     values:[
-    //         'Electronics',
-    //         'Camera',
-    //         'Laptop',
-    //         'Bags',
-    //         'Smartphone',
-    //         'Shoes',
-    //         'Watches',
-    //         'Headphone'
-    //     ]
-    // },
-    // message:'Please Select correct Category'
+    // required:true
 },
 name:{
     type:String,
@@ -42,10 +29,10 @@ name:{
 //     type:Number,
 //     required:true
 // },
-// stock:{
-//     type:Number,
-//     required:true
-// },
+    // stock:{
+    //     type:Number,
+    //     required:true
+    // },
 // star:{
 //     type:Number,
 //     required:[true,'Please Enter Product star '],
@@ -55,9 +42,11 @@ name:{
 //     type:Number,
 //     // required:true
 // },
-img:{
+image:
+    {
     type:String
-},
+}
+,
 // url:{
 //     type:String
 // },
