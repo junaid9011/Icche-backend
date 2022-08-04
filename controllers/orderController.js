@@ -16,7 +16,10 @@ exports.newOrder = asyncError(async(req,res,next)=>{
     user
 }=req.body;
     // console.log(req.body)
+    const isExist=await Order.find();
+    let orderNumber=`#${(isExist.length)+1}`
     const createOrder=await Order.create({
+        orderNumber,
         user:user._id,
         orderItems,
         shippingInfo,
@@ -54,7 +57,9 @@ exports.getSingleOrder = asyncError(async(req,res,next)=>{
 exports.myOrders = asyncError(async(req,res,next)=>{
     
     const myOrder = await Order.find({user:req.params.user})
-
+    myOrder.sort((a)=>{
+        return new Date(-a.createdAt)
+    })
     res.status(200).json({
         success: true,
         myOrder
@@ -69,6 +74,9 @@ exports.allOrders = asyncError(async(req,res,next)=>{
     allOrder.forEach(order=>{
         totalAmount+=order.totalPrice;
     })//it will show total amount of all orders
+    allOrder.sort((a)=>{
+        return new Date(-a.createdAt)
+    })
     res.status(200).json({
         success: true,
         totalAmount,
@@ -80,19 +88,22 @@ exports.allOrders = asyncError(async(req,res,next)=>{
 
 exports.processOrder = asyncError(async(req,res,next)=>{
     const findOrder = await Order.findById(req.params.id)/*.populate('user','name email')*/
-    if(findOrder.orderStatus==="Delivered"){
-        return next(new ErrorHandler('This Order is already delivered',400));
+    if(findOrder.orderStatus==="Cancelled"){
+        return next(new ErrorHandler('Cancelled Order could not be Delevered',400));
     }
-    findOrder.orderItems.forEach(async item=>{
-         await updateStock(item.product,item.quantity)
-    })
+    // findOrder.orderItems.forEach(async item=>{
+    //      await updateStock(item.product,item.quantity)
+    // })
 
-    findOrder.orderStatus=req.body.orderStatus,
-    findOrder.deliveredAt=Date.now();
+    findOrder.orderStatus=req.body.orderStatus;
+    if(findOrder.orderStatus==="Delivered")findOrder.deliveredAt=Date.now();
+      
+    
     await findOrder.save();
 
     res.status(200).json({
         success: true,
+        findOrder
         
     })
 })
