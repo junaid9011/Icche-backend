@@ -15,6 +15,19 @@ exports.newProduct=  asyncError( async(req,res,next)=>{
     // 
     const {image}=req.body
     const isUploaded= await cloudinary.uploader.upload(image,{folder:"Icche"})
+    
+    isExist=await Product.find({category:req.body.category});
+    // console.log(isExist)
+    let length=isExist.length;
+    
+    let code=''
+    if(req.body.category==='Clothes')code='ICL'
+    else code='ICM'
+    let productId="";
+    if(length>=99)  productId=`${code}0${length+1}`
+    else if(length>=9) productId=`${code}00${length+1}`
+    else productId=`${code}000${length+1}`
+    req.body.key=productId;
     req.body.image=isUploaded.secure_url;
     const createProduct= await Product.create(req.body); // it will create new product according to schema
     res.status(201).json({
