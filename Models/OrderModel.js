@@ -20,6 +20,10 @@ const orderSchema=mongoose.Schema({
     //         required: true
     //     }
     // },
+    orderNumber:{
+        type:String,
+        // required:true,
+    },
     user:{
         type:mongoose.Schema.ObjectId,
         // required: true,
@@ -64,12 +68,12 @@ const orderSchema=mongoose.Schema({
     },
     tax:{
         type:Number,
-        required:true,
+        // required:true,
         defalt:0.0
     },
     shippingPrice:{
         type:Number,
-        required:true,
+        // required:true,
         defalt:0.0
     },
     totalPrice:{
@@ -83,6 +87,11 @@ const orderSchema=mongoose.Schema({
         default:"Processing"
     },
     deliveredAt:{
+        type:Date,
+        // required:true,
+        default:Date.now
+    },
+    createdAt:{
         type:Date,
         // required:true,
         default:Date.now
