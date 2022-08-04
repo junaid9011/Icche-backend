@@ -79,11 +79,11 @@ exports.login = asyncError(async(req, res, next)=>{
     const findUser = await User.findOne({userId}).select('+password')//we select password because we set password select false in usermodel
     
     if(!findUser){
-        // return next(new ErrorHandler('Invalid Password',401));
-        return res.status(404).json({
-            success:false,
-            message:'Invalid Password',
-        })
+        return next(new ErrorHandler('Invalid Password',401));
+        // return res.status(404).json({
+        //     success:false,
+        //     message:'Invalid Password',
+        // })
 
     }
     //checks if password is correct or not
@@ -135,11 +135,13 @@ exports.forgotPassword = asyncError(async(req, res,next)=>{
 
 //get current logged in user details
 exports.getUserProfile= asyncError(async(req, res, next)=>{
-    const LoggenInUser= await User.findById(req.user.id)
-
+    // console.log('hello')
+    // console.log(req.user)
+    const user= await User.findById(req.user.id)
+    // const user= req.body.user
     res.status(200).json({
         success:true,
-        LoggenInUser
+        user
 
     })
 })

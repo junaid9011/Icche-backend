@@ -4,7 +4,7 @@ const ErrorHandler=require('../Utlis/ErrorHandler');
 
 module.exports=(err,req,res,next)=>{
         err.statusCode=err.statusCode||500; //the message and code come from product controller
-        if(process.env.NODE_ENV==='DEVELOPMENT'){
+        if(process.env.NODE_ENV==='dev'){
             res.status(err.statusCode).json({
                 success:false,
                 error:err,
@@ -12,7 +12,7 @@ module.exports=(err,req,res,next)=>{
                 stack:err.stack
             })
         }
-        else if(process.env.NODE_ENV==='PRODUCTION'){
+        else if(process.env.NODE_ENV==='prod'){
             let error={...err}
             error.message=err.message;
             //handle wrong mongoose id error
