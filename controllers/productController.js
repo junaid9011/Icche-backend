@@ -14,7 +14,10 @@ cloudinary.config({
 exports.newProduct=  asyncError( async(req,res,next)=>{
     // 
     const {image}=req.body
-    const isUploaded= await cloudinary.uploader.upload(image,{folder:"Icche"})
+    const isUploaded= await cloudinary.uploader.upload(image,{folder:"Icche"},(error, result) => {
+        if (error) return console.error(error);
+        // return res.json({ URL: result.secure_url });
+      })
     
     isExist=await Product.find({category:req.body.category});
     // console.log(isExist)
